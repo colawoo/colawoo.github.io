@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Java基础," />
 
 
 
@@ -87,24 +87,21 @@
 
 
 
-<meta name="description" content="一条指令的执行，必然会涉及到硬盘、内存、CPU三大计算机主要硬件的协同合作，在讲明它们是怎么协同合作之前，先让我们了解一下它们都是什么。
-指令计算机指令就是指挥机器工作的指示和命令，程序就是一系列按一定顺序排列的指令，执行程序的过程就是计算机的工作过程。通俗点说就是我们写的每一行代码，最终都对计算机起到指示和命令。
-硬盘硬盘是计算机的主要存储媒介，它可以在计算机断电的情况下存储数据。正是因为这个特">
+<meta name="description" content="概述JAVA反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意一个方法和属性；这种动态获取的信息以及动态调用对象的方法的功能称为java语言的反射机制。要想解剖一个类,必须先要获取到该类的字节码文件对象（Class对象）。而解剖使用的就是Class类中的方法，所以先要获取到每一个字节码文件对应的Class类型的对象。
+反射主要解决动态编程">
 <meta property="og:type" content="article">
-<meta property="og:title" content="指令是如何运行的">
-<meta property="og:url" content="http://yoursite.com/2017/02/27/up2017-1/index.html">
+<meta property="og:title" content="反射">
+<meta property="og:url" content="http://yoursite.com/2017/03/05/up2017-2/index.html">
 <meta property="og:site_name" content="VXZH">
-<meta property="og:description" content="一条指令的执行，必然会涉及到硬盘、内存、CPU三大计算机主要硬件的协同合作，在讲明它们是怎么协同合作之前，先让我们了解一下它们都是什么。
-指令计算机指令就是指挥机器工作的指示和命令，程序就是一系列按一定顺序排列的指令，执行程序的过程就是计算机的工作过程。通俗点说就是我们写的每一行代码，最终都对计算机起到指示和命令。
-硬盘硬盘是计算机的主要存储媒介，它可以在计算机断电的情况下存储数据。正是因为这个特">
-<meta property="og:image" content="http://yoursite.com/2017/02/27/up2017-1/up2017-1-pic-1.png">
-<meta property="og:updated_time" content="2017-02-27T13:12:48.000Z">
+<meta property="og:description" content="概述JAVA反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意一个方法和属性；这种动态获取的信息以及动态调用对象的方法的功能称为java语言的反射机制。要想解剖一个类,必须先要获取到该类的字节码文件对象（Class对象）。而解剖使用的就是Class类中的方法，所以先要获取到每一个字节码文件对应的Class类型的对象。
+反射主要解决动态编程">
+<meta property="og:image" content="http://yoursite.com/2017/03/05/up2017-2/up2017-2-pic-1.png">
+<meta property="og:updated_time" content="2017-03-05T09:50:47.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="指令是如何运行的">
-<meta name="twitter:description" content="一条指令的执行，必然会涉及到硬盘、内存、CPU三大计算机主要硬件的协同合作，在讲明它们是怎么协同合作之前，先让我们了解一下它们都是什么。
-指令计算机指令就是指挥机器工作的指示和命令，程序就是一系列按一定顺序排列的指令，执行程序的过程就是计算机的工作过程。通俗点说就是我们写的每一行代码，最终都对计算机起到指示和命令。
-硬盘硬盘是计算机的主要存储媒介，它可以在计算机断电的情况下存储数据。正是因为这个特">
-<meta name="twitter:image" content="http://yoursite.com/2017/02/27/up2017-1/up2017-1-pic-1.png">
+<meta name="twitter:title" content="反射">
+<meta name="twitter:description" content="概述JAVA反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意一个方法和属性；这种动态获取的信息以及动态调用对象的方法的功能称为java语言的反射机制。要想解剖一个类,必须先要获取到该类的字节码文件对象（Class对象）。而解剖使用的就是Class类中的方法，所以先要获取到每一个字节码文件对应的Class类型的对象。
+反射主要解决动态编程">
+<meta name="twitter:image" content="http://yoursite.com/2017/03/05/up2017-2/up2017-2-pic-1.png">
 
 
 
@@ -132,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/02/27/up2017-1/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/03/05/up2017-2/"/>
 
 
 
 
 
-  <title> 指令是如何运行的 | VXZH </title>
+  <title> 反射 | VXZH </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -257,7 +254,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/27/up2017-1/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/05/up2017-2/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="VXZH">
@@ -281,7 +278,7 @@
             
             
               
-                指令是如何运行的
+                反射
               
             
           </h1>
@@ -296,8 +293,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-27T21:12:48+08:00">
-                2017-02-27
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-05T16:56:43+08:00">
+                2017-03-05
               </time>
             
 
@@ -314,7 +311,7 @@
 
           
           
-             <span id="/2017/02/27/up2017-1/" class="leancloud_visitors" data-flag-title="指令是如何运行的">
+             <span id="/2017/03/05/up2017-2/" class="leancloud_visitors" data-flag-title="反射">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -343,15 +340,27 @@
       
 
       
-        <p>一条指令的执行，必然会涉及到硬盘、内存、CPU三大计算机主要硬件的协同合作，在讲明它们是怎么协同合作之前，先让我们了解一下它们都是什么。</p>
-<h3 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h3><p>计算机指令就是指挥机器工作的指示和命令，程序就是一系列按一定顺序排列的指令，执行程序的过程就是计算机的工作过程。通俗点说就是我们写的每一行代码，最终都对计算机起到指示和命令。</p>
-<h3 id="硬盘"><a href="#硬盘" class="headerlink" title="硬盘"></a>硬盘</h3><p>硬盘是计算机的主要存储媒介，它可以在计算机断电的情况下存储数据。正是因为这个特点，我们的工作结果才得以保存起来。硬盘有机械硬盘（HDD）、固态硬盘（SSD）、混合硬盘，机械硬盘是传统硬盘，而固态硬盘由于读写速度都要比传统硬盘快，现在越来越受用户青睐。</p>
-<h3 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h3><p>计算机运行的所有程序，都是在内存中完成的。它是与CPU之间沟通的桥梁。内存(Memory)也被称为主存储器，其作用是用于暂时存放CPU中的运算数据，以及与硬盘等外部存储器交换的数据。只要计算机在运行中，CPU就会把需要运算的数据调到内存中进行运算，当运算完成后CPU再将结果传送出来，内存的运行也决定了计算机的稳定运行。</p>
-<h3 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h3><p>CPU，又称中央处理器（Central Processing Unit），是一块超大规模的集成电路，是一台计算机的运算核心（Core）和控制核心（ Control Unit）。它的功能主要是解释计算机指令以及处理计算机软件中的数据。中央处理器主要包括运算器（算术逻辑运算单元，ALU，Arithmetic Logic Unit）和高速缓冲存储器（Cache）及实现它们之间联系的数据（Data）、控制及状态的总线（Bus）。它与内部存储器（Memory）和输入/输出（I/O）设备合称为电子计算机三大核心部件。</p>
-<p>现在我们了解了它们各自是什么，那么接下来我们聊一聊它们是怎么一起协调工作执行一条指令的。首先，请看下图，是一台计算机的硬件系统的主要部件（IO设备等没在此图展现）。</p>
-<p><img src="/2017/02/27/up2017-1/up2017-1-pic-1.png" alt="计算机硬件系统组成"></p>
-<p>我们写好的程序（如.java），原文件及编译后生成的字节码文件（.class），都会以二进制的形式存储在硬盘上。当我们想运行这个程序的时候，首先会将字节码文件经过IO总线、内存总线加载到内存中，等待CPU的调用。前面我们说过，CPU包括逻辑运算单元和寄存器（缓存等暂且不讨论），逻辑运算单元当然就是完成各种计算的任务了，而寄存器则用来暂存。它会将从内存读取的数据、指令、地址暂存起来，等待逻辑运算单元进行计算。</p>
-<p>逻辑运算单元计算的结果，会暂存在寄存器中，之后写回内存。最后我们可以选择将结果打印到屏幕上，还是写入硬盘永久保存起来。</p>
+        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>JAVA反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意一个方法和属性；这种动态获取的信息以及动态调用对象的方法的功能称为java语言的反射机制。要想解剖一个类,必须先要获取到该类的字节码文件对象（Class对象）。而解剖使用的就是Class类中的方法，所以先要获取到每一个字节码文件对应的Class类型的对象。</p>
+<p>反射主要解决动态编程，即使用反射时，所有的对象生成是动态的，调用的方法也是动态的。反射可以简化开发，但是代码的可读性很低。很多主流框架都使用了反射技术，像ssh框架都采用了xml文件配置+反射技术。</p>
+<p>注意：JAVA不是动态语言，因为动态语言强调在程序运行过程中不仅能获取并调用类里面的属性和方法，还要求能够给类增加属性和方法，而JAVA中的反射只能获取调用，不能修改类的结构。</p>
+<p>在反射中包含Declared的方法表示获取私有的成员内容，一般结合setAccessible(true)方法一起使用。</p>
+<h3 id="获取Class对象的三种方式"><a href="#获取Class对象的三种方式" class="headerlink" title="获取Class对象的三种方式"></a>获取Class对象的三种方式</h3><p>要想知道获取Class对象的三种方式，首先我们应该知道如下三个阶段。<br><img src="/2017/03/05/up2017-2/up2017-2-pic-1.png" alt="获取Class对象的三种方式"></p>
+<ul>
+<li><p>源码阶段：Class类中静态方法forName()，读取配置文件。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Class clazz = Class.forName(<span class="string">"全限定类名"</span>);</div></pre></td></tr></table></figure>
+</li>
+<li><p>字节码阶段：静态属性class。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Class clazz = 类名.class;</div></pre></td></tr></table></figure>
+</li>
+<li><p>存在对象阶段：Object类的getClass()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Class clazz = 对象名.getClass();</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="获取"><a href="#获取" class="headerlink" title="获取"></a>获取</h3><p>当我们想通过反射动态的调用方法、获取字段等，先拿到Class对象是首要工作，当我们获得了Class对象之后，那么这个类就对我们透明了，我们可以拿到它的一切。</p>
+<h4 id="通过反射获取带参构造方法"><a href="#通过反射获取带参构造方法" class="headerlink" title="通过反射获取带参构造方法"></a>通过反射获取带参构造方法</h4><p>Class类的newInstance()方法是使用该类无参的构造函数创建对象, 如果一个类没有无参的构造函数, 就不能这样创建了,可以调用Class类的getConstructor(String.class,int.class)方法获取一个指定的构造函数然后再调用Constructor类的newInstance(“字符串参数”,整形参数)方法创建对象。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Class clazz = Class.forName(<span class="string">"io.github.vxzh.Person"</span>);</div><div class="line">Constructor c = clazz.getConstructor(String.class,<span class="keyword">int</span>.class);	<span class="comment">//获取有参构造</span></div><div class="line">Person p = (Person) c.newInstance(<span class="string">"张三"</span>,<span class="number">23</span>);</div></pre></td></tr></table></figure></p>
+<h4 id="通过反射获取成员变量"><a href="#通过反射获取成员变量" class="headerlink" title="通过反射获取成员变量"></a>通过反射获取成员变量</h4><p>Class.getField(String)方法可以获取类中的指定字段(可见的), 如果是私有的可以用getDeclaedField(“name”)方法获取,通过set(obj, “李四”)方法可以设置指定对象上该字段的值, 如果是私有的需要先调用setAccessible(true)设置访问权限,用获取的指定的字段调用get(obj)可以获取指定对象中该字段的值。</p>
+<h4 id="通过反射获取方法并调用"><a href="#通过反射获取方法并调用" class="headerlink" title="通过反射获取方法并调用"></a>通过反射获取方法并调用</h4><p>Class.getMethod(String, Class…) 和 Class.getDeclaredMethod(String, Class…)方法可以获取类中的指定方法,调用invoke(Object, Object…)可以调用该方法。</p>
+<h4 id="通过反射获取泛型、注解等"><a href="#通过反射获取泛型、注解等" class="headerlink" title="通过反射获取泛型、注解等"></a>通过反射获取泛型、注解等</h4><p>除了获取成员变量、成员方法、构造方法等常用的之外，还可以获取到泛型、注解等。</p>
 
       
     </div>
@@ -373,6 +382,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/Java基础/" rel="tag"># Java基础</a>
+          
+        </div>
+      
 
       
         
@@ -382,15 +397,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2017/02/27/up2017-1/" rel="next" title="指令是如何运行的">
+                <i class="fa fa-chevron-left"></i> 指令是如何运行的
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/03/05/up2017-2/" rel="prev" title="反射">
-                反射 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -508,7 +523,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#指令"><span class="nav-number">1.</span> <span class="nav-text">指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#硬盘"><span class="nav-number">2.</span> <span class="nav-text">硬盘</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内存"><span class="nav-number">3.</span> <span class="nav-text">内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU"><span class="nav-number">4.</span> <span class="nav-text">CPU</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取Class对象的三种方式"><span class="nav-number">2.</span> <span class="nav-text">获取Class对象的三种方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取"><span class="nav-number">3.</span> <span class="nav-text">获取</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#通过反射获取带参构造方法"><span class="nav-number">3.1.</span> <span class="nav-text">通过反射获取带参构造方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过反射获取成员变量"><span class="nav-number">3.2.</span> <span class="nav-text">通过反射获取成员变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过反射获取方法并调用"><span class="nav-number">3.3.</span> <span class="nav-text">通过反射获取方法并调用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过反射获取泛型、注解等"><span class="nav-number">3.4.</span> <span class="nav-text">通过反射获取泛型、注解等</span></a></li></ol></li></ol></div>
             
 
           </div>
