@@ -1,0 +1,807 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Java是一个跨平台的语言，而JVM是使其跨平台的基石。Java文件编译之后成为Class文件，这是因为有了它的存在，才使Java具有平台无关性。Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格按照顺序紧凑地排列在Class文件之中，中间没有添加任何分隔符，这使得整个Class文件中存储的内容几乎全部都是程序运行的必要数据，没有空隙存在。当遇到需要占用8位字节以上的空间的数据项">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM之Class类文件结构">
+<meta property="og:url" content="http://yoursite.com/2017/04/04/up2017-4/index.html">
+<meta property="og:site_name" content="VXZH">
+<meta property="og:description" content="Java是一个跨平台的语言，而JVM是使其跨平台的基石。Java文件编译之后成为Class文件，这是因为有了它的存在，才使Java具有平台无关性。Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格按照顺序紧凑地排列在Class文件之中，中间没有添加任何分隔符，这使得整个Class文件中存储的内容几乎全部都是程序运行的必要数据，没有空隙存在。当遇到需要占用8位字节以上的空间的数据项">
+<meta property="og:image" content="http://yoursite.com/2017/04/04/up2017-4/up2017-4-pic1.png">
+<meta property="og:image" content="http://yoursite.com/2017/04/04/up2017-4/up2017-4-pic3.png">
+<meta property="og:image" content="http://yoursite.com/2017/04/04/up2017-4/up2017-4-pic4.png">
+<meta property="og:image" content="http://yoursite.com/2017/04/04/up2017-4/up2017-4-pic5.png">
+<meta property="og:image" content="http://yoursite.com/2017/04/04/up2017-4/up2017-4-pic2.png">
+<meta property="og:image" content="http://yoursite.com/2017/04/04/up2017-4/up2017-4-pic6.png">
+<meta property="og:image" content="http://yoursite.com/2017/04/04/up2017-4/up2017-4-pic7.png">
+<meta property="og:updated_time" content="2017-04-04T07:49:55.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JVM之Class类文件结构">
+<meta name="twitter:description" content="Java是一个跨平台的语言，而JVM是使其跨平台的基石。Java文件编译之后成为Class文件，这是因为有了它的存在，才使Java具有平台无关性。Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格按照顺序紧凑地排列在Class文件之中，中间没有添加任何分隔符，这使得整个Class文件中存储的内容几乎全部都是程序运行的必要数据，没有空隙存在。当遇到需要占用8位字节以上的空间的数据项">
+<meta name="twitter:image" content="http://yoursite.com/2017/04/04/up2017-4/up2017-4-pic1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/04/up2017-4/"/>
+
+
+
+
+
+  <title> JVM之Class类文件结构 | VXZH </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">VXZH</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/04/up2017-4/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="VXZH">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/uploads/avatar.jpeg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="VXZH">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="VXZH" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                JVM之Class类文件结构
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-04T13:19:30+08:00">
+                2017-04-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/04/04/up2017-4/" class="leancloud_visitors" data-flag-title="JVM之Class类文件结构">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Java是一个跨平台的语言，而JVM是使其跨平台的基石。Java文件编译之后成为Class文件，这是因为有了它的存在，才使Java具有平台无关性。Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格按照顺序紧凑地排列在Class文件之中，中间没有添加任何分隔符，这使得整个Class文件中存储的内容几乎全部都是程序运行的必要数据，没有空隙存在。当遇到需要占用8位字节以上的空间的数据项时，则会按照高位在前的方式分割成若干个8位字节进行存储（大端存储Big-Endian）。</p>
+<p>根据Java虚拟机规范的规定，Class文件格式采用一种类似于C语言结构体的伪结构来存储，这种伪结构中只有两种数据类型：无符号数和表。</p>
+<p>无符号数属于基本的数据类型，以u1、u2、u4、u8来分别代表1个字节、2个字节、4个字节、8个字节的无符号数，无符号数可以用来描述数字、索引引用、数量值，或者按照UTF-8编码构成字符串值。</p>
+<p>表是由多个无符号数或者其它表作为数据项构成的复合数据类型，所有表都习惯性地以”_info”结尾。表用于描述有层次关系的复合结构的数据，整个Class文件本质上就是一张表。 它由下表所示的数据项构成。<br><img src="/2017/04/04/up2017-4/up2017-4-pic1.png" alt="Class文件格式"></p>
+<p>无论是无符号数还是表，当需要描述同意数据类型但数量不定的多个数据时，经常会使用一个前置的容器计数器加若干个连续的数据项的形式，这时称这一系列连续的某一类型的数据为某一类型的集合。</p>
+<p>Class文件结构不像XML等描述语言，由于它没有任何分隔符号，所以Class文件中无论顺序还是数量，甚至于数据存储的字节序（Class文件使用的是Big-Endian）这样的细节，都是被严格限定的，哪个字节代表什么含义，长度是多少，先后顺序如何，都不允许改变。</p>
+<h3 id="魔数"><a href="#魔数" class="headerlink" title="魔数"></a>魔数</h3><p>每个Class文件的头4个字节称为魔数（Magic Number），它的唯一作用是用于确定这个文件是否为一个能被虚拟机接受的Class文件。很多文件存储标准中都使用魔数来进行身份识别，譬如图片格式，如gif或jpeg等在文件头中都存有魔数。Class文件魔数的值为0xCAFEBABE。如果一个文件不是以0xCAFEBABE开头，那它就肯定不是Java class文件。</p>
+<h3 id="版本号"><a href="#版本号" class="headerlink" title="版本号"></a>版本号</h3><p>紧接着魔数的4个字节存储的是Class文件的版本号：第5和第6是次版本号（Minior Version），第7个和第8个字节是主版本号(Major Version)。Java的版本号是人45开始的，JDK1.1之后的每个JDK大版本发布主版本号向上加1，高版本的JDK能向下兼容以前版本的Class文件，但不能运行以后版本的Class文件，即使文件格式并未发生变化，虚拟机也必须拒绝执行超过其版本号的Class文件。JDK1.1能支持版本号为45.0~45.65535的Class文件，JDK1.2则能支持45.0~46.65535的Class文件。JDK1.7可生成的Class文件主版本号的最大值为51.0。 </p>
+<h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><p>紧接着主次版本号之后的是常量池入口，常量池可以理解为Class文件中的资源仓库，它是Class文件结构中与其他项目关联最多的数据类型，也是占用Class文件空间最大的数据项目之一，同时他还是在Class文件中第一个出现的表类型数据。</p>
+<p>由于常量池中的常量的数量是不固定的，所以在常量池的入口需要放置一项u2类型的数据，代表常量池容量计数器（constant_pool_count）。与Java中语言习惯不一样的是，这个容量计数器是从1而不是从0开始的。在Class文件格式规范制定之时，设计者将第0项常量空出来是哟特殊考虑的，这个做的目的在于满足后面某些指向常量池的索引值的数据在特定情况下需要表达“不引用任何一个常量”的含义，这种情况就可以把索引值置为0来表示。Class文件结构中只有常量池的容量计数是从1开始的，对于其他集合类型，包括接口索引集合、字段表集合、方法表集合等的容量计数都与一般习惯相同，从0开始。</p>
+<p>常量池之中主要存放两大类常量：字面量（Literal）和符号引用（Symbolic References）。字面量比较接近于Java语言层面的常量概念，如文本字符串、被声明为final的常量值等。而符号引用则属于编译原理方面的概念，包括了下面三类常量:</p>
+<ul>
+<li>类和接口的全限定名（Fully Qualified Name）</li>
+<li>字段的名称和描述符（Descriptor）</li>
+<li>方法的名称和描述符</li>
+</ul>
+<p>Java代码在进行Java编译的时候，并不像C和C++那样有”连接”这一步骤，而是在虚拟机加载Class文件的时候进行动态连接。也就是说，在Class文件中不会保存各个方法和字段的最终内存布局信息，因此这些字段和方法的符号引用不经过转换的话是无法得到真正的内存入口地址，也就无法直接被虚拟机使用。当虚拟机运行时，需要从常量池获得对应的符号引用，再在类创建时或运行时解析并翻译到具体的内存地址之中。 </p>
+<p>常量池中的每一项常量都是一个表，在JDK1.7之前共有11种结构各不相同的表结构数据，在JDK1.7中为了更好地支持动态语言调用，又额外增加了3种（CONSTANT_MethodHandle_info、CONSTANT_MethodType_info、CONTANT_InvokeDynamic_info），这14种表都有一个共同的特点，就是表开始的第一位是一个u1类型的标志位(tag，取置见下表标志位)，代有当前这个常量属于哪种常量类型。这14常量类型所代表的具体含义如下表所示。<br><img src="/2017/04/04/up2017-4/up2017-4-pic3.png" alt="常量池中的数据类型"></p>
+<p>之所以说常量池是最繁琐的数据，是因为这14中常量类型各自均有自己的结构。<br><img src="/2017/04/04/up2017-4/up2017-4-pic4.png" alt="常量池中的14种常量项的结构总表"><br><img src="/2017/04/04/up2017-4/up2017-4-pic5.png" alt="常量池中的14种常量项的结构总表"></p>
+<h3 id="访问标志"><a href="#访问标志" class="headerlink" title="访问标志"></a>访问标志</h3><p>在常量池结束之后，紧接着的两个字节代表访问标志（access_flags），这个标志用于识别一些类或者接口层次的访问信息，包括：这个Class是类还是接口；是否定义为public类型；是否定义为abstract类型；如果是类的话，是否被声明为final等。具体的标识为以及标志的含义请见下表。<br><img src="/2017/04/04/up2017-4/up2017-4-pic2.png" alt="访问标志"></p>
+<p>access_flags中一共有16个标志位可以使用，当前只定义了其中8个，没有使用到的标志位要求一律为0。</p>
+<h3 id="类索引-父类索引-接口索引集合"><a href="#类索引-父类索引-接口索引集合" class="headerlink" title="类索引 父类索引 接口索引集合"></a>类索引 父类索引 接口索引集合</h3><p>类索引（this_class）和父类索引（super_class）都是一个u2类型的数据，而接口索引集合（interfaces）是一组u2类型的数据的集合，Class文件中由这三项数据来确定这个类的继承关系。类索引用于确定这个类的全限定名，父类索引用于确定这个类的父类的全限定名。由于Java不允许多重继承，所以父类索引只有一个，除了java.lang.Object之外，所有的Java类都有父类，因此除了java.lang.Object外，所有Java类的父类索引都不为0。接口索引集合就是用来描述这个类实现了哪些接口，这些被实现的接口将按implements语句（所有这个Java类本身就是一个接口，则应当是extends语句）后的接口顺序从左到右排列在接口索引集合中。</p>
+<p>类索引、父类索引和接口索引集合都按照顺序排列在访问标志后，类索引和父类索引用两个u2类型的索引值表示，它们各自指向一个类型为CONSTANT_Class)_info的类描符常量，通过CONSTANT_Class_info类型的常量中的索引值可以找到定义在CONSTANT_Utf8_nfo类型的常量中的全限定名字符串。</p>
+<p>对于接口索引集合，入口的第一项是一个u2类型的数据，为接口计数器（interfaces_count），表示索引表的容量。如果该类没有实现任何接口，则该计数器为0，后面的接口索引表不再占用任何字节。</p>
+<h3 id="字段表集合"><a href="#字段表集合" class="headerlink" title="字段表集合"></a>字段表集合</h3><p>字段表（field_info）用于描述接口或类中声明的变量。字段（field）包括类级别变量以及实例级别变量，但不包括在方法内部声明的局部变量。</p>
+<p>在class文件中，紧接在interfaces后面的是对在该类或者接口中所声明的字段的描述。首先是名为fields_count的计数，它是类变量和实例变量的字段的数量总和。在这个计数后面的是不同长度的field_info表的序列(fields_count指出了序列中有多少个field_info表)。只有在文件中由类或者接口声明了的字段才能在fields列表中列出。在fields列表中，不列出从超类或者父接口继承而来的字段。另一方面，fields列表可能会包含在对应的Java源文件中没有叙述的字段，这是因为Java编译器可以会在编译时向类或者接口添加字段。</p>
+<p>在Java中，描述字段的信息有：字段的作用域、是实例变量还是类变量（static）、可变性(final)、并发可见性(volatile)、可否序列化(trasient)、字段数据类型、字段名称。这些信息中，各个修饰符都是布尔值，要么有某个修饰符，要么没有，很适合使用标志位来表示。而字段叫什么名字、字段被定义为什么数据类型，这些都是无法固定的，只能引用常量池中的常量来描述。<br><img src="/2017/04/04/up2017-4/up2017-4-pic6.png" alt="字段表结构"></p>
+<h3 id="方法表"><a href="#方法表" class="headerlink" title="方法表"></a>方法表</h3><p>方法表和字段表很类似，Class文件存储格式中对方法的描述与字段的描述几乎采用了完全一致的方式，方法表的结构如同字段表一样，一次包括了访问标志（access_flags）、名称索引（name_index）、描述符索引（descriptor_index）、属性表集合（attributes）。<br><img src="/2017/04/04/up2017-4/up2017-4-pic7.png" alt="方法表结构"></p>
+<h3 id="属性表"><a href="#属性表" class="headerlink" title="属性表"></a>属性表</h3><p>属性表（attribute_info）在前面的讲解之中已经出现过多次，在Class文件、字段表、方法表都可以携带自己的属性表集合，以用于描述某些场景专有的信息。与Class文件中其他的数据项目要求严格的顺讯、长度和内容不同，属性表集合的限制稍微宽松了一些，不再要求各个属性表具有严格顺序，并且只要不与已有属性名重复，任何人实现的编译器都可以向属性表中写入自己定义的属性信息，Java虚拟机运行时会忽略掉它不认识的属性。此处比较重要且复杂，留待下次补写（TODO）。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/09/up2017-3/" rel="next" title="线性表的链式存储结构">
+                <i class="fa fa-chevron-left"></i> 线性表的链式存储结构
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpeg"
+               alt="VXZH" />
+          <p class="site-author-name" itemprop="name">VXZH</p>
+           
+              <p class="site-description motion-element" itemprop="description">Later Equals Never.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#魔数"><span class="nav-number">1.</span> <span class="nav-text">魔数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#版本号"><span class="nav-number">2.</span> <span class="nav-text">版本号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常量池"><span class="nav-number">3.</span> <span class="nav-text">常量池</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#访问标志"><span class="nav-number">4.</span> <span class="nav-text">访问标志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类索引-父类索引-接口索引集合"><span class="nav-number">5.</span> <span class="nav-text">类索引 父类索引 接口索引集合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字段表集合"><span class="nav-number">6.</span> <span class="nav-text">字段表集合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法表"><span class="nav-number">7.</span> <span class="nav-text">方法表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#属性表"><span class="nav-number">8.</span> <span class="nav-text">属性表</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">VXZH</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3eCsVAVY8z48YMn23lGqKPfm-gzGzoHsz", "4CEBuWXwCsu2NeFphV83tcKh");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
