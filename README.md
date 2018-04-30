@@ -1,5 +1,8 @@
 # vxzh.github.io
 
+[TOC]
+
+
 ## Program Language
 ### Assembly Language
 ### C
